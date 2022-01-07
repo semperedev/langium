@@ -124,7 +124,7 @@ TerminalRule:
 		^terminal=TerminalAlternatives
 	';';
 
-terminal RegexLiteral returns string: /\/(?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+\//;
+terminal RegexLiteral returns string: /\/(?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+\/[a-z]?/;
 
 TerminalAlternatives returns AbstractElement:
 	TerminalGroup ({TerminalAlternatives.elements+=current} '|' elements+=TerminalGroup)*;

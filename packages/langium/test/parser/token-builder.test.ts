@@ -61,6 +61,7 @@ let abPattern: TokenPattern | undefined;
 let aPattern: TokenPattern | undefined;
 let booleanTerminalPattern: TokenPattern | undefined;
 let abTerminalPattern: TokenPattern | undefined;
+let mlCommentWithFlag: TokenPattern | undefined;
 
 describe('tokenBuilder#caseInsensitivePattern', () => {
     beforeAll(async () => {
@@ -112,4 +113,22 @@ describe('tokenBuilder#caseInsensitivePattern', () => {
         expect(abTerminalPattern).toEqual(new RegExp(/ABD?/));
     });
 
+});
+describe('tokenBuilder#patternFlags', () => {
+    beforeAll(async () => {
+        const text = `
+        grammar test
+        Main: AB;
+        hidden terminal ML_COMMENT: /\\/\\*.*\\*\\//s;
+        `;
+        const grammar = (await parseHelper<Grammar>(grammarServices)(text)).document.parseResult.value;
+        const tokens = tokenBuilder.buildTokens(grammar);
+        const patterns = tokens.map(token => token.PATTERN);
+
+        mlCommentWithFlag = patterns[0];
+    });
+
+    test('should create regex with flag', () => {
+        expect(mlCommentWithFlag).toEqual(new RegExp(/\/\*.*\*\/\//s));
+    });
 });
