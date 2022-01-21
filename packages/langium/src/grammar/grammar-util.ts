@@ -259,7 +259,7 @@ function withCardinality(regex: string, cardinality?: string, wrap = false): str
 
 export function getTypeName(rule: ast.AbstractRule | undefined): string {
     if (rule) {
-        return rule.type ?? rule.name;
+        return rule.type?.name ?? rule.name;
     } else {
         throw new Error('Unknown rule type');
     }
@@ -267,7 +267,7 @@ export function getTypeName(rule: ast.AbstractRule | undefined): string {
 
 export function getRuleType(rule: ast.AbstractRule | undefined): string {
     if (ast.isParserRule(rule) && isDataTypeRule(rule) || ast.isTerminalRule(rule)) {
-        return rule.type ?? 'string';
+        return rule.type?.name ?? 'string';
     }
     return getTypeName(rule);
 }

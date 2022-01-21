@@ -4,6 +4,29 @@ entry Module:
 	'module' name=ID
 	(statements+=Statement)*;
 
+//////////////////////////////////////////////////////////////////////////////////////
+
+X returns XType:
+	name=ID;
+
+type Animal = {
+	x: :XType
+}
+
+type HoneyType = :Delicious | :Perfect | :Wonderful
+
+type Bear = Animal & {
+	honey: HoneyType
+}
+
+type Bee = {
+	dance: :boolean
+}
+type BeeOrBear = Bear | Bee & {x: :string}
+type BeeAndBear = Bear & Bee & {name: :string}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
 Statement:
 	Definition | Evaluation;
 

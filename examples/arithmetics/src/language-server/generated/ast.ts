@@ -49,6 +49,16 @@ export function isStatement(item: unknown): item is Statement {
     return reflection.isInstance(item, Statement);
 }
 
+export interface XType extends AstNode {
+    name: string
+}
+
+export const XType = 'XType';
+
+export function isXType(item: unknown): item is XType {
+    return reflection.isInstance(item, XType);
+}
+
 export interface DeclaredParameter extends AbstractDefinition {
 }
 
@@ -112,14 +122,14 @@ export function isEvaluation(item: unknown): item is Evaluation {
     return reflection.isInstance(item, Evaluation);
 }
 
-export type ArithmeticsAstType = 'AbstractDefinition' | 'Expression' | 'Module' | 'Statement' | 'DeclaredParameter' | 'Definition' | 'BinaryExpression' | 'FunctionCall' | 'NumberLiteral' | 'Evaluation';
+export type ArithmeticsAstType = 'AbstractDefinition' | 'Expression' | 'Module' | 'Statement' | 'XType' | 'DeclaredParameter' | 'Definition' | 'BinaryExpression' | 'FunctionCall' | 'NumberLiteral' | 'Evaluation';
 
 export type ArithmeticsAstReference = 'FunctionCall:func';
 
 export class ArithmeticsAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['AbstractDefinition', 'Expression', 'Module', 'Statement', 'DeclaredParameter', 'Definition', 'BinaryExpression', 'FunctionCall', 'NumberLiteral', 'Evaluation'];
+        return ['AbstractDefinition', 'Expression', 'Module', 'Statement', 'XType', 'DeclaredParameter', 'Definition', 'BinaryExpression', 'FunctionCall', 'NumberLiteral', 'Evaluation'];
     }
 
     isInstance(node: unknown, type: string): boolean {

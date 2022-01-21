@@ -27,13 +27,16 @@ TypeIntersection returns TypeExpression:
 TypePrimary returns TypeExpression:
 		'(' TypeUnion ')'
 	| 	{TypeSchema} '{' attributes+=TypeAttribute* '}'
-	|	{TypeAtom} (refType=[Declaration] | builtinType=Keyword);
+	|	{TypeAtom} (refType=[Declaration] | ':' builtinType=ID);
 
 TypeAttribute:
 	name=ID ':' ^type=TypeUnion ';'?;
 
 Declaration:
-	TypeDeclaration | AbstractRule;
+	TypeDeclaration | ReturnType | AbstractRule;
+
+ReturnType:
+	'returns' name=ID;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,8 +47,8 @@ GrammarImport:
 
 ParserRule :
 	(
-	  (^entry?='entry' | ^fragment?='fragment') RuleNameAndParams (wildcard?='*' | ('returns' ^type=ID)?)
-	| RuleNameAndParams ('returns' ^type=ID)?
+	  (^entry?='entry' | ^fragment?='fragment') RuleNameAndParams (wildcard?='*' | (^type=ReturnType)?)
+	| RuleNameAndParams (^type=ReturnType)?
 	)
 	(definesHiddenTokens?='hidden' '(' (hiddenTokens+=[AbstractRule:ID] (',' hiddenTokens+=[AbstractRule:ID])*)? ')')? ':'
 		alternatives=Alternatives
@@ -151,7 +154,7 @@ PredicatedGroup returns Group:
 	(predicated?='=>' | firstSetPredicated?='->') '(' elements+=Alternatives ')';
 
 TerminalRule:
-	^hidden?='hidden'? 'terminal' (^fragment?='fragment' name=ID | name=ID ('returns' ^type=ID)?) ':'
+	^hidden?='hidden'? 'terminal' (^fragment?='fragment' name=ID | name=ID (^type=ReturnType)?) ':'
 		^terminal=TerminalAlternatives
 	';';
 

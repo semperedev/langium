@@ -58,6 +58,29 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
     {
       "$type": "ParserRule",
       "parameters": [],
+      "name": "X",
+      "hiddenTokens": [],
+      "type": {
+        "$type": "ReturnType",
+        "name": "XType"
+      },
+      "alternatives": {
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "arguments": [],
+          "rule": {
+            "$refText": "ID"
+          }
+        },
+        "elements": []
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
       "name": "Statement",
       "hiddenTokens": [],
       "alternatives": {
@@ -273,7 +296,10 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
       "parameters": [],
       "name": "Addition",
       "hiddenTokens": [],
-      "type": "Expression",
+      "type": {
+        "$type": "ReturnType",
+        "name": "Expression"
+      },
       "alternatives": {
         "$type": "Group",
         "elements": [
@@ -337,7 +363,10 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
       "parameters": [],
       "name": "Multiplication",
       "hiddenTokens": [],
-      "type": "Expression",
+      "type": {
+        "$type": "ReturnType",
+        "name": "Expression"
+      },
       "alternatives": {
         "$type": "Group",
         "elements": [
@@ -401,7 +430,10 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
       "parameters": [],
       "name": "PrimaryExpression",
       "hiddenTokens": [],
-      "type": "Expression",
+      "type": {
+        "$type": "ReturnType",
+        "name": "Expression"
+      },
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -544,7 +576,10 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
     {
       "$type": "TerminalRule",
       "name": "NUMBER",
-      "type": "number",
+      "type": {
+        "$type": "ReturnType",
+        "name": "number"
+      },
       "terminal": {
         "$type": "RegexToken",
         "regex": "[0-9]+(\\\\.[0-9])?",
@@ -572,7 +607,162 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
       }
     }
   ],
-  "types": [],
+  "types": [
+    {
+      "$type": "TypeDeclaration",
+      "name": "Animal",
+      "type": {
+        "$type": "TypeSchema",
+        "attributes": [
+          {
+            "$type": "TypeAttribute",
+            "name": "x",
+            "type": {
+              "$type": "TypeAtom",
+              "builtinType": "XType"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "TypeDeclaration",
+      "name": "HoneyType",
+      "type": {
+        "$type": "TypeUnion",
+        "left": {
+          "$type": "TypeUnion",
+          "left": {
+            "$type": "TypeAtom",
+            "builtinType": "Delicious"
+          },
+          "right": {
+            "$type": "TypeAtom",
+            "builtinType": "Perfect"
+          }
+        },
+        "right": {
+          "$type": "TypeAtom",
+          "builtinType": "Wonderful"
+        }
+      }
+    },
+    {
+      "$type": "TypeDeclaration",
+      "name": "Bear",
+      "type": {
+        "$type": "TypeIntersection",
+        "left": {
+          "$type": "TypeAtom",
+          "refType": {
+            "$refText": "Animal"
+          }
+        },
+        "right": {
+          "$type": "TypeSchema",
+          "attributes": [
+            {
+              "$type": "TypeAttribute",
+              "name": "honey",
+              "type": {
+                "$type": "TypeAtom",
+                "refType": {
+                  "$refText": "HoneyType"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$type": "TypeDeclaration",
+      "name": "Bee",
+      "type": {
+        "$type": "TypeSchema",
+        "attributes": [
+          {
+            "$type": "TypeAttribute",
+            "name": "dance",
+            "type": {
+              "$type": "TypeAtom",
+              "builtinType": "boolean"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "TypeDeclaration",
+      "name": "BeeOrBear",
+      "type": {
+        "$type": "TypeUnion",
+        "left": {
+          "$type": "TypeAtom",
+          "refType": {
+            "$refText": "Bear"
+          }
+        },
+        "right": {
+          "$type": "TypeIntersection",
+          "left": {
+            "$type": "TypeAtom",
+            "refType": {
+              "$refText": "Bee"
+            }
+          },
+          "right": {
+            "$type": "TypeSchema",
+            "attributes": [
+              {
+                "$type": "TypeAttribute",
+                "name": "x",
+                "type": {
+                  "$type": "TypeAtom",
+                  "builtinType": "string"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$type": "TypeDeclaration",
+      "name": "BeeAndBear",
+      "type": {
+        "$type": "TypeIntersection",
+        "left": {
+          "$type": "TypeIntersection",
+          "left": {
+            "$type": "TypeAtom",
+            "refType": {
+              "$refText": "Bear"
+            }
+          },
+          "right": {
+            "$type": "TypeAtom",
+            "refType": {
+              "$refText": "Bee"
+            }
+          }
+        },
+        "right": {
+          "$type": "TypeSchema",
+          "attributes": [
+            {
+              "$type": "TypeAttribute",
+              "name": "name",
+              "type": {
+                "$type": "TypeAtom",
+                "builtinType": "string"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "isDeclared": true,
   "name": "Arithmetics"
 }`));
