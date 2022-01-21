@@ -11,7 +11,31 @@ entry Grammar:
         (definesHiddenTokens?='hidden' '(' (hiddenTokens+=[AbstractRule:ID] (',' hiddenTokens+=[AbstractRule:ID])*)? ')')?
     )?
 	imports+=GrammarImport*
-	(rules+=AbstractRule)+;
+	(rules+=AbstractRule | types+=TypeDeclaration)+;
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+TypeDeclaration:
+	'type' name=ID '=' ^type=TypeUnion ';'?;
+
+TypeUnion returns TypeExpression:
+	TypeIntersection ({TypeUnion.left=current} '|' right=TypeIntersection)*;
+
+TypeIntersection returns TypeExpression:
+	TypePrimary ({TypeIntersection.left=current} '&' right=TypePrimary)*;
+
+TypePrimary returns TypeExpression:
+		'(' TypeUnion ')'
+	| 	{TypeSchema} '{' attributes+=TypeAttribute* '}'
+	|	{TypeAtom} (refType=[Declaration] | builtinType=Keyword);
+
+TypeAttribute:
+	name=ID ':' ^type=TypeUnion ';'?;
+
+Declaration:
+	TypeDeclaration | AbstractRule;
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 AbstractRule : ParserRule | TerminalRule;
 
@@ -20,8 +44,8 @@ GrammarImport:
 
 ParserRule :
 	(
-	  (^entry?='entry' | ^fragment?='fragment') RuleNameAndParams (wildcard?='*' | ('returns' type=ID)?)
-	| RuleNameAndParams ('returns' type=ID)?
+	  (^entry?='entry' | ^fragment?='fragment') RuleNameAndParams (wildcard?='*' | ('returns' ^type=ID)?)
+	| RuleNameAndParams ('returns' ^type=ID)?
 	)
 	(definesHiddenTokens?='hidden' '(' (hiddenTokens+=[AbstractRule:ID] (',' hiddenTokens+=[AbstractRule:ID])*)? ')')? ':'
 		alternatives=Alternatives
@@ -55,7 +79,7 @@ AbstractTokenWithCardinality returns AbstractElement:
 	(Assignment | AbstractTerminal) cardinality=('?'|'*'|'+')?;
 
 Action returns AbstractElement:
-	{Action} '{' type=ID ('.' feature=ID operator=('='|'+=') 'current')? '}';
+	{Action} '{' ^type=ID ('.' feature=ID operator=('='|'+=') 'current')? '}';
 
 AbstractTerminal returns AbstractElement:
 	Keyword |
@@ -115,7 +139,7 @@ AssignableAlternatives returns AbstractElement:
 	AssignableTerminal ({Alternatives.elements+=current} ('|' elements+=AssignableTerminal)+)?;
 
 CrossReference returns AbstractElement:
-	{CrossReference} '[' type=[ParserRule:ID] ((deprecatedSyntax?='|' | ':') ^terminal=CrossReferenceableTerminal )? ']';
+	{CrossReference} '[' ^type=[ParserRule:ID] ((deprecatedSyntax?='|' | ':') ^terminal=CrossReferenceableTerminal )? ']';
 
 CrossReferenceableTerminal returns AbstractElement:
 	Keyword | RuleCall;
@@ -127,7 +151,7 @@ PredicatedGroup returns Group:
 	(predicated?='=>' | firstSetPredicated?='->') '(' elements+=Alternatives ')';
 
 TerminalRule:
-	^hidden?='hidden'? 'terminal' (^fragment?='fragment' name=ID | name=ID ('returns' type=ID)?) ':'
+	^hidden?='hidden'? 'terminal' (^fragment?='fragment' name=ID | name=ID ('returns' ^type=ID)?) ':'
 		^terminal=TerminalAlternatives
 	';';
 
