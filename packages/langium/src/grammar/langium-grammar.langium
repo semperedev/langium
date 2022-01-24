@@ -27,10 +27,20 @@ TypeIntersection returns TypeExpression:
 TypePrimary returns TypeExpression:
 		'(' TypeUnion ')'
 	| 	{TypeSchema} '{' attributes+=TypeAttribute* '}'
-	|	{TypeAtom} (refType=[Declaration] | ':' builtinType=ID);
+	| 	{TypeAtom} (isArray?='Array') '<' TypeReferenceOrAtom '>'
+	|	TypeReferenceOrAtom;
+
+TypeReferenceOrAtom returns TypeAtom:
+		isReference?='Reference' '<' TypeAtom '>'
+	|	TypeAtom;
+
+TypeAtom:
+		refType=[Declaration]
+	| 	':' builtinType=ID
+	| 	builtinType=Keyword;
 
 TypeAttribute:
-	name=ID ':' ^type=TypeUnion ';'?;
+	name=ID (isOptional?='?')? ':' ^type=TypeUnion ';'?;
 
 Declaration:
 	TypeDeclaration | ReturnType | AbstractRule;

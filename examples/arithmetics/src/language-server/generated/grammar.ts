@@ -619,7 +619,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
             "name": "x",
             "type": {
               "$type": "TypeAtom",
-              "builtinType": "XType"
+              "builtinType": "XType",
+              "attributes": []
             }
           }
         ]
@@ -634,16 +635,19 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
           "$type": "TypeUnion",
           "left": {
             "$type": "TypeAtom",
-            "builtinType": "Delicious"
+            "builtinType": "Delicious",
+            "attributes": []
           },
           "right": {
             "$type": "TypeAtom",
-            "builtinType": "Perfect"
+            "builtinType": "Perfect",
+            "attributes": []
           }
         },
         "right": {
           "$type": "TypeAtom",
-          "builtinType": "Wonderful"
+          "builtinType": "Wonderful",
+          "attributes": []
         }
       }
     },
@@ -656,7 +660,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
           "$type": "TypeAtom",
           "refType": {
             "$refText": "Animal"
-          }
+          },
+          "attributes": []
         },
         "right": {
           "$type": "TypeSchema",
@@ -668,7 +673,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
                 "$type": "TypeAtom",
                 "refType": {
                   "$refText": "HoneyType"
-                }
+                },
+                "attributes": []
               }
             }
           ]
@@ -686,7 +692,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
             "name": "dance",
             "type": {
               "$type": "TypeAtom",
-              "builtinType": "boolean"
+              "builtinType": "boolean",
+              "attributes": []
             }
           }
         ]
@@ -701,7 +708,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
           "$type": "TypeAtom",
           "refType": {
             "$refText": "Bear"
-          }
+          },
+          "attributes": []
         },
         "right": {
           "$type": "TypeIntersection",
@@ -709,7 +717,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
             "$type": "TypeAtom",
             "refType": {
               "$refText": "Bee"
-            }
+            },
+            "attributes": []
           },
           "right": {
             "$type": "TypeSchema",
@@ -719,7 +728,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
                 "name": "x",
                 "type": {
                   "$type": "TypeAtom",
-                  "builtinType": "string"
+                  "builtinType": "string",
+                  "attributes": []
                 }
               }
             ]
@@ -738,13 +748,15 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
             "$type": "TypeAtom",
             "refType": {
               "$refText": "Bear"
-            }
+            },
+            "attributes": []
           },
           "right": {
             "$type": "TypeAtom",
             "refType": {
               "$refText": "Bee"
-            }
+            },
+            "attributes": []
           }
         },
         "right": {
@@ -755,7 +767,8 @@ export const ArithmeticsGrammar = (): Grammar => loadedArithmeticsGrammar ||(loa
               "name": "name",
               "type": {
                 "$type": "TypeAtom",
-                "builtinType": "string"
+                "builtinType": "string",
+                "attributes": []
               }
             }
           ]

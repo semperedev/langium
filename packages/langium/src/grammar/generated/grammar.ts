@@ -460,45 +460,150 @@ export const LangiumGrammarGrammar = (): Grammar => loadedLangiumGrammarGrammar 
                 "elements": []
               },
               {
-                "$type": "Alternatives",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "refType",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$refText": "Declaration"
-                      }
-                    },
-                    "elements": []
-                  },
-                  {
-                    "$type": "Group",
-                    "elements": [
-                      {
-                        "$type": "Keyword",
-                        "value": ":",
-                        "elements": []
-                      },
-                      {
-                        "$type": "Assignment",
-                        "feature": "builtinType",
-                        "operator": "=",
-                        "terminal": {
-                          "$type": "RuleCall",
-                          "arguments": [],
-                          "rule": {
-                            "$refText": "ID"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
+                "$type": "Assignment",
+                "feature": "isArray",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "Array"
+                },
+                "elements": []
+              },
+              {
+                "$type": "Keyword",
+                "value": "<"
+              },
+              {
+                "$type": "RuleCall",
+                "arguments": [],
+                "rule": {
+                  "$refText": "TypeReferenceOrAtom"
+                }
+              },
+              {
+                "$type": "Keyword",
+                "value": ">"
               }
             ]
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "TypeReferenceOrAtom"
+            },
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "TypeReferenceOrAtom",
+      "hiddenTokens": [],
+      "type": {
+        "$type": "ReturnType",
+        "name": "TypeAtom"
+      },
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "isReference",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "Reference"
+                },
+                "elements": []
+              },
+              {
+                "$type": "Keyword",
+                "value": "<"
+              },
+              {
+                "$type": "RuleCall",
+                "arguments": [],
+                "rule": {
+                  "$refText": "TypeAtom"
+                }
+              },
+              {
+                "$type": "Keyword",
+                "value": ">"
+              }
+            ]
+          },
+          {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "TypeAtom"
+            },
+            "elements": []
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "TypeAtom",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "refType",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$refText": "Declaration"
+              }
+            },
+            "elements": []
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": ":",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "builtinType",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "ID"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "$type": "Assignment",
+            "feature": "builtinType",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "Keyword"
+              }
+            },
+            "elements": []
           }
         ]
       }
@@ -523,6 +628,17 @@ export const LangiumGrammarGrammar = (): Grammar => loadedLangiumGrammarGrammar 
               }
             },
             "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "isOptional",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "?"
+            },
+            "elements": [],
+            "cardinality": "?"
           },
           {
             "$type": "Keyword",

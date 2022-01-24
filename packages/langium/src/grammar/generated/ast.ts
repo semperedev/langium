@@ -9,7 +9,7 @@ import { AstNode, AstReflection, Reference } from '../../syntax-tree';
 import { isAstNode } from '../../utils/ast-util';
 
 export interface AbstractElement extends AstNode {
-    readonly $container: Alternatives | Assignment | CharacterRange | CrossReference | Group | NegatedToken | ParserRule | TerminalAlternatives | TerminalGroup | TerminalRule | UnorderedGroup | UntilToken;
+    readonly $container: Alternatives | Assignment | CharacterRange | CrossReference | Group | NegatedToken | ParserRule | TerminalAlternatives | TerminalGroup | TerminalRule | TypeAtom | UnorderedGroup | UntilToken;
     cardinality: '*' | '+' | '?'
 }
 
@@ -93,6 +93,7 @@ export function isParameter(item: unknown): item is Parameter {
 
 export interface TypeAttribute extends AstNode {
     readonly $container: TypeSchema;
+    isOptional: boolean
     name: string
     type: TypeExpression
 }
@@ -375,7 +376,9 @@ export function isTypeDeclaration(item: unknown): item is TypeDeclaration {
 }
 
 export interface TypeAtom extends TypeExpression {
-    builtinType: string
+    builtinType: Keyword | string
+    isArray: boolean
+    isReference: boolean
     refType: Reference<Declaration>
 }
 
