@@ -54,6 +54,30 @@ export class Interface {
         this.fields = fields;
     }
 
+    toStringAsType(): string {
+        const interfaceNode = new CompositeGeneratorNode();
+        interfaceNode.contents.push('type ', this.name, ' = ');
+        if (this.superTypes.length > 0) {
+            interfaceNode.contents.push(this.superTypes.join(' & '), ' & ');
+        }
+        if (this.fields.length > 0) {
+            interfaceNode.contents.push('{', NL);
+            const fieldsNode = new IndentNode();
+            for (const field of this.fields.sort((a, b) => a.name.localeCompare(b.name))) {
+                const option = field.optional && field.reference && !field.array ? '?' : '';
+                let type = field.types.map(type => (['string', 'number', 'boolean', 'bigint', 'Date'].includes(type) ? ':' : '') + type).sort().join(' | ');
+                type = field.reference ? 'Reference<' + type + '>' : type;
+                type = field.array ? 'Array<' + type + '>' : type;
+                fieldsNode.contents.push(field.name, option, ': ', type, NL);
+            }
+            interfaceNode.contents.push(fieldsNode, '}', NL, NL);
+        } else {
+            interfaceNode.contents.push('{}', NL);
+        }
+
+        return processGeneratorNode(interfaceNode);
+    }
+
     toString(): string {
         const interfaceNode = new CompositeGeneratorNode();
         const superTypes = this.superTypes.length > 0 ? this.superTypes : ['AstNode'];

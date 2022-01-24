@@ -15,6 +15,7 @@ import { generateAst } from './generator/ast-generator';
 import { serializeGrammar } from './generator/grammar-serializer';
 import { generateModule } from './generator/module-generator';
 import { generateTextMate } from './generator/textmate-generator';
+import { generateTypes } from './generator/type-generator';
 import { getUserChoice, log } from './generator/util';
 import { getFilePath, LangiumConfig, LangiumLanguageConfig, RelativePath } from './package';
 import { validateParser } from './parser-validation';
@@ -166,7 +167,7 @@ export async function generate(config: LangiumConfig, options: GenerateOptions):
     const output = path.resolve(relPath, config.out ?? 'src/generated');
     log('log', options, `Writing generated files to ${output.white.bold}`);
 
-    if (await rmdirWithFail(output, ['ast.ts', 'grammar.ts', 'module.ts'], options)) {
+    if (await rmdirWithFail(output, ['ast.ts', 'grammar.ts', 'module.ts', 'types.langium'], options)) {
         return 'failure';
     }
     if (await mkdirWithFail(output, options)) {
@@ -181,6 +182,9 @@ export async function generate(config: LangiumConfig, options: GenerateOptions):
 
     const genModule = generateModule(grammars, config, configMap);
     await writeWithFail(path.resolve(output, 'module.ts'), genModule, options);
+
+    const genTypes = generateTypes(grammarServices, grammars);
+    await writeWithFail(path.resolve(output, 'types.langium'), genTypes, options);
 
     for (const grammar of grammars) {
         const languageConfig = configMap.get(grammar);
