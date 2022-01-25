@@ -3,7 +3,34 @@
  * DO NOT EDIT MANUALLY!
  ******************************************************************************/
 
+type A = {
+    prop1: C
+    prop2: D
+    prop3: E
+}
+
+
 type AbstractDefinition = {
+    name: :string
+}
+
+
+type B = {
+    name: :string
+}
+
+
+type C = {
+    name: :string
+}
+
+
+type D = {
+    name: :string
+}
+
+
+type E = {
     name: :string
 }
 

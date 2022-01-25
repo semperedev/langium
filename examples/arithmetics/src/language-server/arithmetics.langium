@@ -6,6 +6,17 @@ entry Module:
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+A: B prop1=C (prop2=D | prop3=E);
+B:
+	'B' name=ID;
+C:
+	'C' name=ID;
+D:
+	'D' name=ID;
+E:
+	'E' name=ID;
+
+
 X returns XType:
 	name=ID;
 

@@ -7,6 +7,18 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { AstNode, AstReflection, Reference, isAstNode } from 'langium';
 
+export interface A extends AstNode {
+    prop1: C
+    prop2: D
+    prop3: E
+}
+
+export const A = 'A';
+
+export function isA(item: unknown): item is A {
+    return reflection.isInstance(item, A);
+}
+
 export interface AbstractDefinition extends AstNode {
     readonly $container: Definition | Module;
     name: string
@@ -16,6 +28,49 @@ export const AbstractDefinition = 'AbstractDefinition';
 
 export function isAbstractDefinition(item: unknown): item is AbstractDefinition {
     return reflection.isInstance(item, AbstractDefinition);
+}
+
+export interface B extends AstNode {
+    name: string
+}
+
+export const B = 'B';
+
+export function isB(item: unknown): item is B {
+    return reflection.isInstance(item, B);
+}
+
+export interface C extends AstNode {
+    readonly $container: A;
+    name: string
+}
+
+export const C = 'C';
+
+export function isC(item: unknown): item is C {
+    return reflection.isInstance(item, C);
+}
+
+export interface D extends AstNode {
+    readonly $container: A;
+    name: string
+}
+
+export const D = 'D';
+
+export function isD(item: unknown): item is D {
+    return reflection.isInstance(item, D);
+}
+
+export interface E extends AstNode {
+    readonly $container: A;
+    name: string
+}
+
+export const E = 'E';
+
+export function isE(item: unknown): item is E {
+    return reflection.isInstance(item, E);
 }
 
 export interface Expression extends AstNode {
@@ -122,14 +177,14 @@ export function isEvaluation(item: unknown): item is Evaluation {
     return reflection.isInstance(item, Evaluation);
 }
 
-export type ArithmeticsAstType = 'AbstractDefinition' | 'Expression' | 'Module' | 'Statement' | 'XType' | 'DeclaredParameter' | 'Definition' | 'BinaryExpression' | 'FunctionCall' | 'NumberLiteral' | 'Evaluation';
+export type ArithmeticsAstType = 'A' | 'AbstractDefinition' | 'B' | 'C' | 'D' | 'E' | 'Expression' | 'Module' | 'Statement' | 'XType' | 'DeclaredParameter' | 'Definition' | 'BinaryExpression' | 'FunctionCall' | 'NumberLiteral' | 'Evaluation';
 
 export type ArithmeticsAstReference = 'FunctionCall:func';
 
 export class ArithmeticsAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['AbstractDefinition', 'Expression', 'Module', 'Statement', 'XType', 'DeclaredParameter', 'Definition', 'BinaryExpression', 'FunctionCall', 'NumberLiteral', 'Evaluation'];
+        return ['A', 'AbstractDefinition', 'B', 'C', 'D', 'E', 'Expression', 'Module', 'Statement', 'XType', 'DeclaredParameter', 'Definition', 'BinaryExpression', 'FunctionCall', 'NumberLiteral', 'Evaluation'];
     }
 
     isInstance(node: unknown, type: string): boolean {
