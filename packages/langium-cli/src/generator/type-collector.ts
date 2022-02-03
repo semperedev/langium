@@ -12,6 +12,11 @@ import { processGeneratorNode } from 'langium';
 import { Cardinality, isOptional } from 'langium';
 import { URI } from 'vscode-uri';
 
+type GrammarContent = {
+    rules: Set<langium.ParserRule>;
+    types: Set<langium.TypeDeclaration>;
+}
+
 type TypeAlternative = {
     name: string,
     super: string[],
@@ -153,10 +158,13 @@ class TypeTree {
 export function collectAst(documents: LangiumDocuments, grammars: langium.Grammar[]): Interface[] {
     const state = createState();
 
-    const parserRules = collectAllParserRules(documents, grammars);
+    const grammarContent = collectAllGrammarContent(documents, grammars);
 
-    const allTypes: TypeAlternative[] = [];
-    for (const rule of parserRules) {
+    const allTypes: TypeAlternative[] = Array.from(grammarContent.types)
+        .filter(typeDecl => !langium.isTypeAtom(typeDecl.type) && !langium.isTypeIntersection(typeDecl.type))
+        .map(typeDeclarationToTypeAlternative);
+
+    for (const rule of Array.from(grammarContent.rules)) {
         state.tree = new TypeTree();
         state.parserRule = rule;
         const type = simpleType(rule);
@@ -165,10 +173,58 @@ export function collectAst(documents: LangiumDocuments, grammars: langium.Gramma
         collectElement(state, type, rule.alternatives);
         allTypes.push(...state.tree.getLeafNodes());
     }
-    return calculateAst(allTypes);
+
+    return calculateAst(Array.from(allTypes));
 }
 
-function collectAllParserRules(documents: LangiumDocuments, grammars: langium.Grammar[], rules: Set<langium.ParserRule> = new Set(), visited: Set<URI> = new Set()): langium.ParserRule[] {
+type FieldsSuper = {
+    fields: Field[],
+    super: string[]
+}
+
+function typeDeclarationToTypeAlternative(typeDecl: langium.TypeDeclaration): TypeAlternative {
+    const type = typeDecl.type as langium.TypeUnion | langium.TypeSchema;
+    const fieldsSuper = extractFieldsAndSuper(type);
+    return {
+        name: typeDecl.name,
+        super: fieldsSuper.super,
+        fields: fieldsSuper.fields,
+        ruleCalls: [],
+        hasAction: false
+    };
+}
+
+function extractFieldsAndSuper(typeExpr: langium.TypeExpression): FieldsSuper {
+    const fieldsSuper = {fields: [] as Field[], super: [] as string[]};
+    if (langium.isTypeSchema(typeExpr)) {
+        fieldsSuper.fields = typeExpr.attributes.map(attr => <Field>{
+            name: attr.name,
+            array: false,
+            optional: attr.isOptional,
+            types: toStringType(attr.nametype),
+            reference: false
+        });
+    } else {
+        while (langium.isTypeUnion(typeExpr)) {
+            const left = typeExpr.left;
+            fieldsSuper.super.push(left.toString());
+            typeExpr = left;
+        }
+        if (langium.isTypeSchema(typeExpr)) {
+            const fs = extractFieldsAndSuper(typeExpr);
+            fieldsSuper.fields.concat(fs.fields);
+            fieldsSuper.super.concat(fs.super);
+        }
+    }
+    return fieldsSuper;
+}
+
+function toStringType(typeExpr: langium.TypeExpression): string[] {
+    typeExpr;
+    return ['string'];
+}
+
+function collectAllGrammarContent(documents: LangiumDocuments, grammars: langium.Grammar[], grammarContent: GrammarContent = { rules: new Set(), types: new Set() }, visited: Set<URI> = new Set()): GrammarContent {
 
     for (const grammar of grammars) {
         const doc = getDocument(grammar);
@@ -178,15 +234,16 @@ function collectAllParserRules(documents: LangiumDocuments, grammars: langium.Gr
         visited.add(doc.uri);
         for (const rule of grammar.rules) {
             if (langium.isParserRule(rule) && !rule.fragment && !isDataTypeRule(rule)) {
-                rules.add(rule);
+                grammarContent.rules.add(rule);
             }
         }
+        grammar.types.forEach(grammarContent.types.add, grammarContent.types);
 
         const importedGrammars = grammar.imports.map(e => resolveImport(documents, e)!);
-        collectAllParserRules(documents, importedGrammars, rules, visited);
+        collectAllGrammarContent(documents, importedGrammars, grammarContent, visited);
     }
 
-    return Array.from(rules);
+    return grammarContent;
 }
 
 function createState(type?: TypeAlternative): CollectorState {
