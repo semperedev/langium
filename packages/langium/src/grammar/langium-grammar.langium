@@ -35,18 +35,27 @@ TypeReferenceOrAtom returns TypeAtom:
 	|	TypeAtom;
 
 TypeAtom:
-		refType=[Declaration]
-	| 	':' builtinType=ID
-	| 	builtinType=Keyword;
+		refType=[TypeDeclaration:DeclarationID];
+
+DeclarationID returns string:
+	ID;
+
+PrimitiveType returns string:
+	'string' | 'number' | 'boolean' | 'Date' | 'bigint';
 
 TypeAttribute:
-	name=ID (isOptional?='?')? ':' ^type=TypeUnion ';'?;
+	name=ID (isOptional?='?')? ':' (primitiveType=PrimitiveType | declaredType=[TypeDeclaration:DeclarationID]) ';'?;
 
-Declaration:
-	TypeDeclaration | ReturnType | AbstractRule;
+// type A = {
+//     prop1: B
+//     prop2: ReturnType
+//     prop3: :number
+// }
+
+// type B = :string;
 
 ReturnType:
-	'returns' name=ID;
+	'returns' name=DeclarationID;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
