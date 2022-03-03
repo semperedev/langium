@@ -3296,13 +3296,13 @@ export const LangiumGrammarGrammar = (): Grammar => loadedLangiumGrammarGrammar 
         {
           "$type": "AtomType",
           "refType": {
-            "$refText": "ParserRule"
+            "$refText": "Action"
           }
         },
         {
           "$type": "AtomType",
           "refType": {
-            "$refText": "Action"
+            "$refText": "ParserRule"
           }
         }
       ],
