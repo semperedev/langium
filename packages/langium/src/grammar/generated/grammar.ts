@@ -3298,6 +3298,12 @@ export const LangiumGrammarGrammar = (): Grammar => loadedLangiumGrammarGrammar 
           "refType": {
             "$refText": "ParserRule"
           }
+        },
+        {
+          "$type": "AtomType",
+          "refType": {
+            "$refText": "Action"
+          }
         }
       ],
       "name": "AbstractType"
