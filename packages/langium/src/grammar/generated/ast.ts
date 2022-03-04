@@ -406,7 +406,7 @@ export interface TypeAttribute extends AstNode {
     readonly $container: Interface;
     isOptional: boolean
     name: string
-    type: AtomType
+    typeAlternatives: Array<AtomType>
 }
 
 export const TypeAttribute = 'TypeAttribute';
