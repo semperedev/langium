@@ -22,7 +22,7 @@ Entity:
         (features+=Feature)*
     '}';
 
-Feature:
+Feature infer Feature:
     (many?='many')? name=ID ':' type=[Type:QualifiedName];
 
 QualifiedName returns string:
